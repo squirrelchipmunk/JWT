@@ -33,10 +33,9 @@ public class MyFilter1 implements Filter{
 			if(headerAuth.equals("token")) {
 				chain.doFilter(request, response);
 			}else {
-				res.getOutputStream().write("인증안됨".getBytes());;
+				res.getOutputStream().write("인증안됨".getBytes());
 			}
 		}
-
 		chain.doFilter(request, response);
 	}
 	
