@@ -83,11 +83,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 			String jwtToken = JWT.create()
 					.withSubject("토큰")
-					.withExpiresAt(new Date(System.currentTimeMillis()+(60000*10)) )  // 토큰 만료 시간
+					.withExpiresAt(new Date(System.currentTimeMillis()+JwtProperty.EXPIRATION_TIME) )  // 토큰 만료 시간
 					.withClaim("id", principalDetails.getUser().getId())
 					.withClaim("username", principalDetails.getUser().getUsername())
-					.sign(Algorithm.HMAC512("secretKey"));
+					.sign(Algorithm.HMAC512(JwtProperty.SECRET));
 			
-			response.addHeader("Authorization", "Bearer "+jwtToken);
+			response.addHeader(JwtProperty.HEADER_STRING, JwtProperty.TOKEN_PREFIX+jwtToken);
 		}
 }

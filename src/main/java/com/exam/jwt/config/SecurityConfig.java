@@ -9,6 +9,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.exam.jwt.config.jwt.JwtAuthenticationFilter;
+import com.exam.jwt.config.jwt.JwtAuthorizationFilter;
+import com.exam.jwt.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +18,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig{
 	private final CorsConfig corsConfig;
-
+	private final UserRepository userRepository;
+	
 	@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable().
@@ -45,7 +48,8 @@ public class SecurityConfig{
 			AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 			http
 					.addFilter(corsConfig.corsFilter())  // 필터 등록
-					.addFilter(new JwtAuthenticationFilter(authenticationManager));
+					.addFilter(new JwtAuthenticationFilter(authenticationManager))
+					.addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository));
 		}
 	}
 }
